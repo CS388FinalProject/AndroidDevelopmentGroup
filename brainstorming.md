@@ -59,7 +59,7 @@
 
 ---
 
-### App Idea 3: [Name]
+### App Idea 3: Stocks Analyzer
 **Why this idea?**
 - This app fetches real-time stock and crypto data via APIs, allowing users to track historical prices and market trends. It’s designed to help users make informed "buy or sell" decisions by presenting complex financial data in a clean, visual format.
 
