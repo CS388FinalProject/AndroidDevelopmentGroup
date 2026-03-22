@@ -53,18 +53,32 @@ The Movie Recommender App helps users find movies they will enjoy by asking a fe
 
 **Tab Navigation** (Tab to Screen)
 
-* [fill out your first tab]
-* [fill out your second tab]
-* [fill out your third tab]
+* Discover -> Question / Preference Screen
+* Recommendations -> Result Screen
+* Favorites -> Saved Movies Screen
 
 **Flow Navigation** (Screen to Screen)
 
-- [list first screen here]
-  - [list screen navigation here]
-  - ...
-- [list second screen here]
-  - [list screen navigation here]
-  - ...
+- Welcome / Home Screen
+  - Leads to Questions / Preferences Screen
+  - Can also go to Favorites Screen
+- Question / Preferences Screen
+  - User answers movie preference questions
+  - Leads to Recommendations Screen after submission
+- Recommendations Screen
+  - Displays multiple personalized movie recommendations
+  - User can tap a movie for more details
+  - User can save a movie to Favorites
+  - Can return to Question / Preferences Screen to try again
+- Movie Details Screen
+  - Shows extended movie description
+  - User can save movie to Favorites
+  - Can return to Recommendations Screen
+- Favorites Screen
+  - Displays saved movies
+  - User can tap a saved movie to view details
+  - Can return to Discover tab to get new recommendations
+
 
 ## Wireframes
 
