@@ -78,9 +78,9 @@
 **Final Chosen Idea:** Movie Recommender
 
 **Why we chose this idea:**
-- [Explain your decision - what made this the best choice among your top 3?]
-- [What excited your team most about this idea?]
-- [How does it balance feasibility with impact?]
+- [Explain your decision - what made this the best choice among your top 3?] - We felt this project was in scope and more relatable to us, and it allowed to apply our skills directly from what we've learned compared to the other ideas.
+- [What excited your team most about this idea?] - We think its a very cool and geniuine idea to build something that people could actually use. We also liked the idea of adding AI to make the recommendations feel more personalized and interesting.
+- [How does it balance feasibility with impact?] - We can build clear and achievable compoenents with a movie API and simple question based UI, and it can still have a strong impact because it creates a personal experience since it's being catered to their preferences. 
 
 **Key Features We'll Focus On:**
 1. Interactive UI that asks the user questions to narrow down their specific genre and movie tastes.
