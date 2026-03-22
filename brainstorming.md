@@ -17,12 +17,12 @@
    - **Description:** An app that can fetch real time stock prices via api and show them on the screen. - Meer
 
 
-5. **[App Idea Name 5]**
-   - **Description:** 
+5. **AI Movie Reccomender**
+   - **Description: An app that asks questions and fetches recent movies and AI picks which movie it thinks you would enjoy the most - Tommy** 
 
 
-6. **[App Idea Name 6]**
-   - **Description:** 
+6. **Weather App**
+   - **Description: An app with an interactive dashboard to view up to date weather information and display it in a fun way** 
 
 
 ---
