@@ -42,12 +42,22 @@ The Movie Recommender App helps users find movies they will enjoy by asking a fe
 
 ### 2. Screen Archetypes
 
-- [list first screen here]
-  - [list associated required story here]
-  - ...
-- [list second screen here]
-  - [list associated required story here]
-  - ...
+- Preference Quiz Screen
+  - User opens the app and is prompted to answer a few simple questions about their movie preferences
+  - User selects options such as genre, mood, or popularity level
+  - User submits their answers to generate personalized recommendations
+- Recommendation Results Screen
+  - User views a scrollable list or grid of recommended movies based on their quiz responses
+  - User can tap on any movie to see more details
+  - User can continue browsing recommendations
+- Movie Detail Screen
+  - User taps on a movie from the recommendation list
+  - User views detailed information such as poster, description, rating, and release year
+  - User can choose to save the movie to their favorites or watchlist
+- Favorites / Watchlist Screen
+  - User navigates to a screen showing movies they previously saved
+  - User can scroll through saved movies
+  - User can tap a saved movie to view its details again
 
 ### 3. Navigation
 
