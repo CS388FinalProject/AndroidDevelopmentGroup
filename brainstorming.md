@@ -14,7 +14,7 @@
 
 
 4. **Stocks Analyzer**
-   - **Description:** An app that can fetch real time stock prices via api and show them on the screen, we can add feature to show charts and maybe even predict what the price will be in a near future. - Meer
+   - **Description:** An app that can fetch real time stock prices via api and show them on the screen. - Meer
 
 
 5. **[App Idea Name 5]**
