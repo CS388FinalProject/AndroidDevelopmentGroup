@@ -118,7 +118,9 @@ fun NextFlixApp(
         ) {
             when (selectedTab) {
                 AppTab.HOME -> HomeTabContent(personalityQuizViewModel = personalityQuizViewModel)
-                AppTab.MOVIE_QUIZ -> MoviePreferenceQuizScreen()
+                AppTab.MOVIE_QUIZ -> MoviePreferenceQuizScreen(
+                    onNavigateBack = { selectedTab = AppTab.HOME }
+                )
                 AppTab.BOOK_QUIZ -> PlaceholderScreen("Book Quiz", "Coming soon!")
                 AppTab.RESULTS -> PlaceholderScreen("Results", "Coming soon!")
                 AppTab.FAVORITES -> PlaceholderScreen("Favorites", "Coming soon!")
