@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nextflix.ui.screens.MoviePreferenceQuizScreen
 import com.example.nextflix.ui.theme.NextFlixTheme
+import com.example.nextflix.ui.screens.BookPreferenceQuizScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +82,7 @@ fun NextFlixApp() {
             when (selectedTab) {
                 AppTab.HOME -> HomeTabContent()
                 AppTab.MOVIE_QUIZ -> MoviePreferenceQuizScreen()
-                AppTab.BOOK_QUIZ -> PlaceholderScreen("Book Quiz", "Coming soon!")
+                AppTab.BOOK_QUIZ -> BookPreferenceQuizScreen()
                 AppTab.RESULTS -> PlaceholderScreen("Results", "Coming soon!")
                 AppTab.FAVORITES -> PlaceholderScreen("Favorites", "Coming soon!")
             }
