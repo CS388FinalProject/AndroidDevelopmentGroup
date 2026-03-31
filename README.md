@@ -120,9 +120,17 @@ this section]
 - ![image alt](https://github.com/CS388FinalProject/AndroidDevelopmentGroup/blob/b5d535db66d3666750f9cac9b6979f14353a30f4/images/milestone2issues.jpg)
 
 ## Issues worked on this sprint
+In this milestone, we worked on the following issues:
 
-- List the issues you completed this sprint
-- [Add giphy that shows current build progress for Milestone 2. Note: We will be looking for progression of work between Milestone 2 and 3. Make sure your giphys are not duplicated and clearly show the change from Sprint 1 to 2.]
+- Issue 1: Build Welcome and Personality Test Screen UI
+- Issue 2: Set up navigation skeleton for all major screens
+- Issue 3: Build Content Choice Screen
+- Issue 4: Build Movie Preference Quiz Screen UI
+- Issue 5: Build Book Preference Quiz Screen UI
+- Issue 6: Create reusable shared quiz UI components
+- Issue 7: Create shared loading, error, and empty-state components
+
+![Milestone 1 Demo](images/milestone2.gif)
 
 <br>
 
