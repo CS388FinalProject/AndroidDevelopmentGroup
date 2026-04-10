@@ -1,6 +1,7 @@
 package com.example.nextflix.data.api
 
 import android.util.Log
+import com.example.nextflix.BuildConfig
 import com.example.nextflix.data.models.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,7 +44,7 @@ class MovieApiService {
     
     private suspend fun performSearch(query: String, maxResults: Int): List<Movie> = withContext(Dispatchers.IO) {
         val encodedQuery = URLEncoder.encode(query, "UTF-8")
-        val urlString = "https://www.omdbapi.com/?s=$encodedQuery&type=movie&apikey=$OMDB_API_KEY"
+        val urlString = "https://www.omdbapi.com/?s=$encodedQuery&type=movie&apikey=${BuildConfig.OMDB_API_KEY}"
         
         Log.d(TAG, "Searching OMDB for: $query")
         
@@ -53,7 +54,7 @@ class MovieApiService {
     
     suspend fun getMovieDetails(imdbId: String): Result<Movie> = withContext(Dispatchers.IO) {
         return@withContext try {
-            val urlString = "https://www.omdbapi.com/?i=$imdbId&apikey=$OMDB_API_KEY"
+            val urlString = "https://www.omdbapi.com/?i=$imdbId&apikey=${BuildConfig.OMDB_API_KEY}"
             
             val response = fetchUrl(urlString)
             val movie = parseOMDBMovieDetails(response)
@@ -67,7 +68,7 @@ class MovieApiService {
     suspend fun searchMoviesByGenre(genre: String, maxResults: Int = 10): Result<List<Movie>> = withContext(Dispatchers.IO) {
         return@withContext try {
             val encodedGenre = URLEncoder.encode(genre, "UTF-8")
-            val urlString = "https://www.omdbapi.com/?s=$encodedGenre&type=movie&apikey=$OMDB_API_KEY"
+            val urlString = "https://www.omdbapi.com/?s=$encodedGenre&type=movie&apikey=${BuildConfig.OMDB_API_KEY}"
             
             val response = fetchUrl(urlString)
             val movies = parseOMDBResponse(response)
@@ -111,7 +112,7 @@ class MovieApiService {
                         id = item.getString("imdbID"),
                         title = item.getString("Title"),
                         releaseYear = try {
-                            item.optString("Year", "N/A").toIntOrNull()
+                            item.optString("Year", "N/A").split("-")[0].toIntOrNull()
                         } catch (e: Exception) {
                             null
                         },
@@ -161,7 +162,7 @@ class MovieApiService {
         }
         
         val releaseYear = try {
-            root.optString("Year", "N/A").toIntOrNull()
+            root.optString("Year", "N/A").split("-")[0].toIntOrNull()
         } catch (e: Exception) {
             null
         }
@@ -193,6 +194,5 @@ class MovieApiService {
     
     companion object {
         private const val TAG = "MovieApiService"
-        private const val OMDB_API_KEY = "7740abfc"
     }
 }

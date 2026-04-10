@@ -1,6 +1,7 @@
 package com.example.nextflix.data.api
 
 import android.util.Log
+import com.example.nextflix.BuildConfig
 import com.example.nextflix.data.models.Book
 import com.example.nextflix.data.models.Movie
 import com.example.nextflix.data.quiz.BookQuizAnswer
@@ -124,7 +125,7 @@ class RecommendationService {
     
     private fun callGeminiAPI(prompt: String, expectedIds: List<String>): List<String> {
         return try {
-            val urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$GEMINI_API_KEY"
+            val urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getApiKey()}"
             val url = URL(urlString)
             val connection = url.openConnection() as HttpURLConnection
             connection.setRequestProperty("Content-Type", "application/json")
@@ -231,6 +232,7 @@ class RecommendationService {
     
     companion object {
         private const val TAG = "RecommendationService"
-        private const val GEMINI_API_KEY = "AIzaSyDs09ynNZPwIGQRlz3gU88PNQtntVOJTXE"
     }
+    
+    private fun getApiKey(): String = BuildConfig.GEMINI_API_KEY
 }
