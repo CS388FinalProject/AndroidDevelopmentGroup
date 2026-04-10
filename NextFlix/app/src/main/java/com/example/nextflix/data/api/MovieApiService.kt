@@ -1,6 +1,7 @@
 package com.example.nextflix.data.api
 
 import android.util.Log
+import com.example.nextflix.BuildConfig
 import com.example.nextflix.data.models.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,7 +44,7 @@ class MovieApiService {
     
     private suspend fun performSearch(query: String, maxResults: Int): List<Movie> = withContext(Dispatchers.IO) {
         val encodedQuery = URLEncoder.encode(query, "UTF-8")
-        val urlString = "https://www.omdbapi.com/?s=$encodedQuery&type=movie&apikey=$OMDB_API_KEY"
+        val urlString = "https://www.omdbapi.com/?s=$encodedQuery&type=movie&apikey=${BuildConfig.OMDB_API_KEY}"
         
         Log.d(TAG, "Searching OMDB for: $query")
         
@@ -193,6 +194,5 @@ class MovieApiService {
     
     companion object {
         private const val TAG = "MovieApiService"
-        private const val OMDB_API_KEY = "7740abfc"
     }
 }

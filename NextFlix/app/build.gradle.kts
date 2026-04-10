@@ -1,9 +1,23 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.0.21"
 }
+
+// Load local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
+val geminiKey = localProperties.getProperty("GEMINI_API_KEY", "").ifEmpty { "default-key" }
+val omdbKey = localProperties.getProperty("OMDB_API_KEY", "").ifEmpty { "default-key" }
+val booksKey = localProperties.getProperty("GOOGLE_BOOKS_API_KEY", "").ifEmpty { "default-key" }
 
 android {
     namespace = "com.example.nextflix"
@@ -18,9 +32,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
-        // Add buildConfigField for API keys
-        buildConfigField("String", "TMDB_API_KEY", "\"YOUR_TMDB_API_KEY\"")
-        buildConfigField("String", "GEMINI_API_KEY", "\"YOUR_GEMINI_API_KEY\"")
+        // Add buildConfigField for API keys from local.properties
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
+        buildConfigField("String", "OMDB_API_KEY", "\"$omdbKey\"")
+        buildConfigField("String", "GOOGLE_BOOKS_API_KEY", "\"$booksKey\"")
     }
 
     buildTypes {

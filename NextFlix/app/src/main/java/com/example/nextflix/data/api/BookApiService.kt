@@ -1,6 +1,7 @@
 package com.example.nextflix.data.api
 
 import android.util.Log
+import com.example.nextflix.BuildConfig
 import com.example.nextflix.data.models.Book
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,7 +17,7 @@ class BookApiService {
     suspend fun searchBooks(query: String, maxResults: Int = 10): Result<List<Book>> = withContext(Dispatchers.IO) {
         return@withContext try {
             val encodedQuery = URLEncoder.encode(query, "UTF-8")
-            val urlString = "https://www.googleapis.com/books/v1/volumes?q=$encodedQuery&maxResults=$maxResults&key=$API_KEY"
+            val urlString = "https://www.googleapis.com/books/v1/volumes?q=$encodedQuery&maxResults=$maxResults&key=${BuildConfig.GOOGLE_BOOKS_API_KEY}"
             
             val response = fetchUrl(urlString)
             val books = parseGoogleBooksResponse(response)
@@ -31,7 +32,7 @@ class BookApiService {
         return@withContext try {
             val query = "$genre fiction"
             val encodedQuery = URLEncoder.encode(query, "UTF-8")
-            val urlString = "https://www.googleapis.com/books/v1/volumes?q=$encodedQuery&maxResults=$maxResults&key=$API_KEY"
+            val urlString = "https://www.googleapis.com/books/v1/volumes?q=$encodedQuery&maxResults=$maxResults&key=${BuildConfig.GOOGLE_BOOKS_API_KEY}"
             
             val response = fetchUrl(urlString)
             val books = parseGoogleBooksResponse(response)
@@ -123,7 +124,6 @@ class BookApiService {
     
     companion object {
         private const val TAG = "BookApiService"
-        private const val API_KEY = "AIzaSyCAemvzu0107-6iy2l6D7uoUsLIBPvMdxE"
     }
 }
 
