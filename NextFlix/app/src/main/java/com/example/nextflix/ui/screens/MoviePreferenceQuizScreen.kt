@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import android.util.Log
 import com.example.nextflix.data.movie.MovieRepository
 import com.example.nextflix.ui.theme.NextFlixTheme
+import com.example.nextflix.ui.viewmodel.RecommendationViewModel
 
 // Placeholder data classes for UI only
 data class MovieQuizQuestion(
@@ -35,7 +36,8 @@ data class MovieQuizQuestion(
 @Composable
 fun MoviePreferenceQuizScreen(
     onNavigateBack: () -> Unit = {},
-    onQuizComplete: () -> Unit = {}
+    onQuizComplete: () -> Unit = {},
+    recommendationViewModel: RecommendationViewModel? = null
 ) {
     // State to track selected answers
     val selectedAnswers = remember { mutableStateMapOf<Int, String>() }
@@ -161,9 +163,10 @@ fun MoviePreferenceQuizScreen(
                         movieRepository.fetchMovies(
                             quizAnswers = selectedAnswers.toMap(),
                             onSuccess = { movies ->
-                                movies.take(5).forEach { movie ->
-                                    Log.d("MovieQuiz", "${movie.title} (${movie.releaseDate}) - Rating: ${movie.voteAverage}")
-                                }
+                                val items = movies.map { movieRepository.toRecommendationItem(it) }
+                                recommendationViewModel?.setMovieResults(items)
+                                Log.d("MovieQuiz", "Loaded ${items.size} movies into results")
+                                onQuizComplete()
                             },
                             onFailure = { error ->
                                 Log.e("MovieQuiz", error)

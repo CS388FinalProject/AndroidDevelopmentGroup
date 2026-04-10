@@ -2,6 +2,8 @@ package com.example.nextflix.data.movie
 
 import android.util.Log
 import com.example.nextflix.BuildConfig
+import com.example.nextflix.data.recommendation.RecommendationContentType
+import com.example.nextflix.data.recommendation.RecommendationItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,6 +45,18 @@ class MovieRepository {
             "Recent (2015+)" -> Pair("2015-01-01", null)
             else -> Pair(null, null)
         }
+    }
+
+    // Converts a TmdbMovie into James's RecommendationItem format
+    fun toRecommendationItem(movie: TmdbMovie): RecommendationItem {
+        return RecommendationItem(
+            id = "tmdb_${movie.id}",
+            contentType = RecommendationContentType.MOVIE,
+            title = movie.title ?: "Unknown Title",
+            imageUrl = movie.posterUrl,
+            summary = movie.overview ?: "No description available.",
+            rating = movie.voteAverage?.let { "%.1f/10".format(it) }
+        )
     }
 
     /**
