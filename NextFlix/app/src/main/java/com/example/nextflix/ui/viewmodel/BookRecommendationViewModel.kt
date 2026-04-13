@@ -53,8 +53,11 @@ class BookRecommendationViewModel(
                     return@launch
                 }
 
-                // Search for books based on genre and mood
-                val searchQuery = "${bookQuiz.genre} ${bookQuiz.mood}"
+                // Search with the strongest available quiz signals.
+                val searchQuery = listOf(bookQuiz.genre, bookQuiz.mood)
+                    .filter { it.isNotBlank() }
+                    .joinToString(" ")
+                    .ifBlank { "fiction books" }
                 val booksResult = bookApiService.searchBooks(searchQuery, maxResults = 20)
                 val availableBooks = booksResult.getOrNull() ?: emptyList()
 
@@ -75,7 +78,11 @@ class BookRecommendationViewModel(
                 _recommendations.value = rankedBooks
                 _generatedRecommendation.value = BookRecommendation(
                     books = rankedBooks,
-                    reason = "Based on your preferences for ${bookQuiz.genre} with a ${bookQuiz.mood} mood"
+                    reason = if (bookQuiz.mood.isBlank()) {
+                        "Based on your preferences for ${bookQuiz.genre}"
+                    } else {
+                        "Based on your preferences for ${bookQuiz.genre} with a ${bookQuiz.mood} mood"
+                    }
                 )
 
                 Log.d(TAG, "Generated ${rankedBooks.size} book recommendations")

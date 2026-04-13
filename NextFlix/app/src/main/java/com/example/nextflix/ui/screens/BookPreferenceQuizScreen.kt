@@ -123,6 +123,7 @@ fun BookPreferenceQuizScreen(
             if (audience.isNotBlank()) this[6] = audience
         }
     }
+    val canSubmit = genre.isNotBlank()
     
     Scaffold(
         topBar = {
@@ -171,6 +172,13 @@ fun BookPreferenceQuizScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            Text(
+                text = "Genre is required. The rest are optional and help fine-tune recommendations.",
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             
             Spacer(modifier = Modifier.height(16.dp))
             
@@ -215,12 +223,12 @@ fun BookPreferenceQuizScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
             
-            if (selectedAnswers.size == questions.size && questions.isNotEmpty()) {
+            if (canSubmit) {
                 Button(
                     onClick = {
                         scope.launch {
-                            viewModel.submitQuiz()
-                            if (validationError.isEmpty()) {
+                            val result = viewModel.submitQuiz()
+                            if (result != null) {
                                 onQuizComplete()
                             }
                         }

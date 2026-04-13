@@ -85,6 +85,10 @@ class MovieQuizViewModel(
         _setting.value = value
     }
 
+    fun hasRequiredAnswers(): Boolean {
+        return genre.value.isNotBlank()
+    }
+
     fun isComplete(): Boolean {
         return genre.value.isNotBlank() &&
                 duration.value.isNotBlank() &&
@@ -97,8 +101,8 @@ class MovieQuizViewModel(
     suspend fun submitQuiz(): MovieQuizAnswer? {
         _validationError.value = ""
         
-        if (!isComplete()) {
-            _validationError.value = "Please answer all questions"
+        if (!hasRequiredAnswers()) {
+            _validationError.value = "Please choose at least a genre"
             return null
         }
 

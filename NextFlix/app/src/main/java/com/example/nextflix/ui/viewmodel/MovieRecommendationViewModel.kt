@@ -53,8 +53,11 @@ class MovieRecommendationViewModel(
                     return@launch
                 }
 
-                // Build search query
-                var searchQuery = "${movieQuiz.genre} ${movieQuiz.era}"
+                // Build search query from available inputs.
+                val searchQuery = listOf(movieQuiz.genre, movieQuiz.era)
+                    .filter { it.isNotBlank() }
+                    .joinToString(" ")
+                    .ifBlank { "popular movies" }
                 var availableMovies = movieApiService.searchMovies(searchQuery, maxResults = 20).getOrNull() ?: emptyList()
                 
                 // If no results with combined query, try just genre
@@ -64,7 +67,7 @@ class MovieRecommendationViewModel(
                 }
                 
                 // If still no results, try era
-                if (availableMovies.isEmpty()) {
+                if (availableMovies.isEmpty() && movieQuiz.era.isNotBlank()) {
                     Log.d("MovieRecommendationVM", "No results for genre, trying era")
                     availableMovies = movieApiService.searchMovies(movieQuiz.era, maxResults = 20).getOrNull() ?: emptyList()
                 }
@@ -92,7 +95,11 @@ class MovieRecommendationViewModel(
                 _recommendations.value = rankedMovies
                 _generatedRecommendation.value = MovieRecommendation(
                     movies = rankedMovies,
-                    reason = "Based on your preferences for ${movieQuiz.genre} from the ${movieQuiz.era} era"
+                    reason = if (movieQuiz.era.isBlank()) {
+                        "Based on your preferences for ${movieQuiz.genre}"
+                    } else {
+                        "Based on your preferences for ${movieQuiz.genre} from the ${movieQuiz.era} era"
+                    }
                 )
                 _isLoading.value = false
 
