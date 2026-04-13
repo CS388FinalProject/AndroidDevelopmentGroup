@@ -84,6 +84,10 @@ class BookQuizViewModel(
         _audience.value = value
     }
 
+    fun hasRequiredAnswers(): Boolean {
+        return genre.value.isNotBlank()
+    }
+
     fun isComplete(): Boolean {
         return genre.value.isNotBlank() &&
                 mood.value.isNotBlank() &&
@@ -96,8 +100,8 @@ class BookQuizViewModel(
     suspend fun submitQuiz(): BookQuizAnswer? {
         _validationError.value = ""
         
-        if (!isComplete()) {
-            _validationError.value = "Please answer all questions"
+        if (!hasRequiredAnswers()) {
+            _validationError.value = "Please choose at least a genre"
             return null
         }
 

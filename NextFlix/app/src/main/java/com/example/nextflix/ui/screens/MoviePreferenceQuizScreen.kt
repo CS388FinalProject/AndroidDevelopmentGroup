@@ -102,6 +102,7 @@ fun MoviePreferenceQuizScreen(
             if (setting.isNotBlank()) this[6] = setting
         }
     }
+    val canSubmit = genre.isNotBlank()
     
     Scaffold(
         topBar = {
@@ -162,6 +163,13 @@ fun MoviePreferenceQuizScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            Text(
+                text = "Genre is required. The rest are optional and improve personalization.",
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             
             Spacer(modifier = Modifier.height(16.dp))
             
@@ -197,12 +205,12 @@ fun MoviePreferenceQuizScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
             
-            AnimatedVisibility(visible = selectedAnswers.size == questions.size && questions.isNotEmpty()) {
+            AnimatedVisibility(visible = canSubmit) {
                 Button(
                     onClick = {
                         scope.launch {
-                            viewModel.submitQuiz()
-                            if (validationError.isEmpty()) {
+                            val result = viewModel.submitQuiz()
+                            if (result != null) {
                                 onQuizComplete()
                             }
                         }

@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.nextflix.BuildConfig
 import com.example.nextflix.data.models.Book
 import com.example.nextflix.data.models.Movie
+import com.example.nextflix.data.personality.PersonalityPreferenceMapper
 import com.example.nextflix.data.quiz.BookQuizAnswer
 import com.example.nextflix.data.quiz.MovieQuizAnswer
 import com.example.nextflix.data.personality.PersonalityQuizResult
@@ -68,22 +69,25 @@ class RecommendationService {
         personalityProfile: PersonalityQuizResult?,
         availableBooks: List<Book>
     ): String {
+        val mappedPreferences = PersonalityPreferenceMapper.map(personalityProfile)
+        val rawPersonalityAnswers = personalityProfile?.answers
+            ?.entries
+            ?.joinToString(", ") { "${it.key}: ${it.value}" }
+            ?: "No personality answers submitted"
+
         return """
             You are a book recommendation expert. Based on the user's preferences, rank these books from best to least suitable.
             
             User's Book Preferences:
-            - Genre: ${bookQuiz.genre}
-            - Mood: ${bookQuiz.mood}
-            - Length: ${bookQuiz.length}
-            - Pace: ${bookQuiz.pace}
-            - Setting: ${bookQuiz.setting}
-            - Audience: ${bookQuiz.audience}
+            - Genre: ${quizValueOrFallback(bookQuiz.genre)}
+            - Mood: ${quizValueOrFallback(bookQuiz.mood)}
+            - Length: ${quizValueOrFallback(bookQuiz.length)}
+            - Pace: ${quizValueOrFallback(bookQuiz.pace)}
+            - Setting: ${quizValueOrFallback(bookQuiz.setting)}
+            - Audience: ${quizValueOrFallback(bookQuiz.audience)}
             
-            ${if (personalityProfile != null) {
-                "User's Personality Profile: ${personalityProfile.answers.entries.joinToString(", ") { "${it.key}: ${it.value}" }}"
-            } else {
-                ""
-            }}
+            Raw Personality Answers: $rawPersonalityAnswers
+            ${PersonalityPreferenceMapper.toPromptBlock(mappedPreferences)}
             
             Available Books (ID: Title - Author):
             ${availableBooks.joinToString("\n") { "${it.id}: ${it.title} by ${it.author}" }}
@@ -98,22 +102,25 @@ class RecommendationService {
         personalityProfile: PersonalityQuizResult?,
         availableMovies: List<Movie>
     ): String {
+        val mappedPreferences = PersonalityPreferenceMapper.map(personalityProfile)
+        val rawPersonalityAnswers = personalityProfile?.answers
+            ?.entries
+            ?.joinToString(", ") { "${it.key}: ${it.value}" }
+            ?: "No personality answers submitted"
+
         return """
             You are a movie recommendation expert. Based on the user's preferences, rank these movies from best to least suitable.
             
             User's Movie Preferences:
-            - Genre: ${movieQuiz.genre}
-            - Duration: ${movieQuiz.duration}
-            - Era: ${movieQuiz.era}
-            - Ending: ${movieQuiz.ending}
-            - Special Effects: ${movieQuiz.specialEffects}
-            - Setting: ${movieQuiz.setting}
+            - Genre: ${quizValueOrFallback(movieQuiz.genre)}
+            - Duration: ${quizValueOrFallback(movieQuiz.duration)}
+            - Era: ${quizValueOrFallback(movieQuiz.era)}
+            - Ending: ${quizValueOrFallback(movieQuiz.ending)}
+            - Special Effects: ${quizValueOrFallback(movieQuiz.specialEffects)}
+            - Setting: ${quizValueOrFallback(movieQuiz.setting)}
             
-            ${if (personalityProfile != null) {
-                "User's Personality Profile: ${personalityProfile.answers.entries.joinToString(", ") { "${it.key}: ${it.value}" }}"
-            } else {
-                ""
-            }}
+            Raw Personality Answers: $rawPersonalityAnswers
+            ${PersonalityPreferenceMapper.toPromptBlock(mappedPreferences)}
             
             Available Movies (ID: Title - Year):
             ${availableMovies.joinToString("\n") { "${it.id}: ${it.title} (${it.releaseYear ?: "N/A"})" }}
@@ -166,11 +173,7 @@ class RecommendationService {
                     
                     // Parse the JSON array from response
                     // Gemini might wrap JSON in markdown code blocks
-                    val jsonText = if (text.startsWith("```")) {
-                        text.substringAfter("```json").substringAfter("```").substringBeforeLast("```").trim()
-                    } else {
-                        text
-                    }
+                    val jsonText = extractJsonArrayText(text)
 
                     val jsonArray = JSONArray(jsonText)
                     val ranking = mutableListOf<String>()
@@ -186,6 +189,15 @@ class RecommendationService {
             Log.e(TAG, "Failed to call Gemini API", e)
             expectedIds
         }
+    }
+
+    private fun extractJsonArrayText(rawText: String): String {
+        val fencedJson = Regex("^```(?:json)?\\s*([\\s\\S]*?)\\s*```$").find(rawText)
+        return fencedJson?.groupValues?.get(1)?.trim() ?: rawText
+    }
+
+    private fun quizValueOrFallback(value: String): String {
+        return if (value.isBlank()) "No preference provided" else value
     }
     
     private fun applyBookRanking(books: List<Book>, ranking: List<String>): List<Book> {

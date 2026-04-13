@@ -12,6 +12,10 @@ data class MovieQuizAnswer(
     val setting: String,
     val completedAtEpochMillis: Long = System.currentTimeMillis()
 ) {
+    fun hasRequiredAnswers(): Boolean {
+        return genre.isNotBlank()
+    }
+
     fun isComplete(): Boolean {
         return genre.isNotBlank() &&
                 duration.isNotBlank() &&
