@@ -141,10 +141,11 @@ In this milestone, we worked on the following issues:
 [Add screenshot of your Project Board with the updated status of issues for Milestone 3. Note that these should include the updated issues you worked on for this sprint and not be a duplicate of Milestone 2 Project board.] <img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
 
 Here are the closed sprint 2 issues
-![image alt](https://github.com/CS388FinalProject/AndroidDevelopmentGroup/blob/b5d535db66d3666750f9cac9b6979f14353a30f4/images/milestone3issues.png)
+![image alt](images/milestone3issues.png)
 
 Here are the issues that are still open:
-![image alt](https://github.com/CS388FinalProject/AndroidDevelopmentGroup/blob/b5d535db66d3666750f9cac9b6979f14353a30f4/images/milestone3issuesopen.png)
+![image alt](images/milestone3issuesopen.png)
+
 ## Completed user stories
 
 - Issue 8: Add personality answer state management
