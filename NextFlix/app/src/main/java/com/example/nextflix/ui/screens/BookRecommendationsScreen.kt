@@ -146,6 +146,13 @@ fun BookRecommendationsScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    item {
+                        Text(
+                            text = "Curated from your quiz answers",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                     generatedRecommendation?.let { rec ->
                         if (rec.reason.isNotEmpty()) {
                             item {
@@ -199,8 +206,8 @@ fun BookRecommendationCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
-        shape = RoundedCornerShape(12.dp),
+            .height(220.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),

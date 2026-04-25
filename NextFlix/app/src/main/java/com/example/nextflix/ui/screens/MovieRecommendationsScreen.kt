@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import com.example.nextflix.ui.viewmodel.MovieRecommendationViewModel
 fun MovieRecommendationsScreen(
     onNavigateBack: () -> Unit = {},
     onMovieSelected: (Movie) -> Unit = {},
+    onSaveToggle: (Movie) -> Unit = {},
     viewModel: MovieRecommendationViewModel = viewModel()
 ) {
     val recommendations by viewModel.recommendations.collectAsStateWithLifecycle()
@@ -140,6 +143,13 @@ fun MovieRecommendationsScreen(
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    item {
+                        Text(
+                            text = "Curated from your quiz answers",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                     if (generatedRecommendation != null) {
                         item {
                             Card(
@@ -173,7 +183,8 @@ fun MovieRecommendationsScreen(
                     items(recommendations) { movie ->
                         MovieRecommendationCard(
                             movie = movie,
-                            onMovieSelected = onMovieSelected
+                            onMovieSelected = onMovieSelected,
+                            onSaveToggle = { onSaveToggle(movie) }
                         )
                     }
                     
@@ -189,14 +200,15 @@ fun MovieRecommendationsScreen(
 @Composable
 fun MovieRecommendationCard(
     movie: Movie,
-    onMovieSelected: (Movie) -> Unit = {}
+    onMovieSelected: (Movie) -> Unit = {},
+    onSaveToggle: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(240.dp)
+            .height(220.dp)
             .clickable { onMovieSelected(movie) },
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -241,7 +253,8 @@ fun MovieRecommendationCard(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(1f),
+                    .weight(1f)
+                    .padding(vertical = 4.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
@@ -296,8 +309,8 @@ fun MovieRecommendationCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
-                // Match score
+
+                // Match score and quick actions
                 Column {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -324,6 +337,19 @@ fun MovieRecommendationCard(
                             .height(4.dp)
                             .clip(RoundedCornerShape(2.dp))
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        IconButton(onClick = onSaveToggle) {
+                            Icon(
+                                imageVector = if (movie.isSaved) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
+                                contentDescription = if (movie.isSaved) "Unsave" else "Save",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
             }
         }

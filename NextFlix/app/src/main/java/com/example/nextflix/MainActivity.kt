@@ -23,11 +23,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nextflix.navigation.OnboardingNavHost
 import com.example.nextflix.navigation.ResultsNavHost
+import com.example.nextflix.data.models.Book
+import com.example.nextflix.data.models.Movie
+import com.example.nextflix.ui.screens.BookDetailScreen
 import com.example.nextflix.ui.screens.MoviePreferenceQuizScreen
 import com.example.nextflix.ui.screens.BookRecommendationsScreen
+import com.example.nextflix.ui.screens.MovieDetailScreen
 import com.example.nextflix.ui.screens.MovieRecommendationsScreen
 import com.example.nextflix.ui.theme.NextFlixTheme
 import com.example.nextflix.ui.screens.BookPreferenceQuizScreen
+import com.example.nextflix.ui.viewmodel.BookRecommendationViewModel
+import com.example.nextflix.ui.viewmodel.MovieRecommendationViewModel
 import com.example.nextflix.ui.viewmodel.PersonalityQuizViewModel
 import com.example.nextflix.ui.viewmodel.RecommendationViewModel
 
@@ -98,22 +104,69 @@ fun NextFlixApp(
     var selectedTab by remember { mutableStateOf(initialTab) }
     var showBookRecommendations by remember { mutableStateOf(false) }
     var showMovieRecommendations by remember { mutableStateOf(false) }
+    var selectedBook by remember { mutableStateOf<Book?>(null) }
+    var selectedMovie by remember { mutableStateOf<Movie?>(null) }
+    val movieRecommendationViewModel: MovieRecommendationViewModel = viewModel()
+    val bookRecommendationViewModel: BookRecommendationViewModel = viewModel()
 
     when {
+        selectedBook != null -> {
+            BookDetailScreen(
+                book = selectedBook!!,
+                onBack = { selectedBook = null },
+                onSaveToggle = {
+                    selectedBook?.let { book ->
+                        if (bookRecommendationViewModel.isBookSaved(book.id)) {
+                            bookRecommendationViewModel.unsaveBook(book.id)
+                            selectedBook = book.copy(isSaved = false)
+                        } else {
+                            bookRecommendationViewModel.saveBook(book.id)
+                            selectedBook = book.copy(isSaved = true)
+                        }
+                    }
+                }
+            )
+        }
+        selectedMovie != null -> {
+            MovieDetailScreen(
+                movie = selectedMovie!!,
+                onBack = { selectedMovie = null },
+                onSaveToggle = {
+                    selectedMovie?.let { movie ->
+                        if (movieRecommendationViewModel.isMovieSaved(movie.id)) {
+                            movieRecommendationViewModel.unsaveMovie(movie.id)
+                            selectedMovie = movie.copy(isSaved = false)
+                        } else {
+                            movieRecommendationViewModel.saveMovie(movie.id)
+                            selectedMovie = movie.copy(isSaved = true)
+                        }
+                    }
+                }
+            )
+        }
         showBookRecommendations -> {
             BookRecommendationsScreen(
                 onNavigateBack = { showBookRecommendations = false },
                 onBookSelected = { book ->
-                    // Handle book selection (detail screen would go here)
-                }
+                    selectedBook = book.copy(isSaved = bookRecommendationViewModel.isBookSaved(book.id))
+                },
+                viewModel = bookRecommendationViewModel
             )
         }
         showMovieRecommendations -> {
             MovieRecommendationsScreen(
                 onNavigateBack = { showMovieRecommendations = false },
                 onMovieSelected = { movie ->
-                    // Handle movie selection (detail screen would go here)
-                }
+                    selectedMovie = movie.copy(isSaved = movieRecommendationViewModel.isMovieSaved(movie.id))
+                },
+                onSaveToggle = { movie ->
+                    if (movieRecommendationViewModel.isMovieSaved(movie.id)) {
+                        movieRecommendationViewModel.unsaveMovie(movie.id)
+                    } else {
+                        movieRecommendationViewModel.saveMovie(movie.id)
+                    }
+                },
+                viewModel = movieRecommendationViewModel
             )
         }
         else -> {

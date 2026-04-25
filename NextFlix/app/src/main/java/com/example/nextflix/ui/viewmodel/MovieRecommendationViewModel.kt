@@ -36,6 +36,8 @@ class MovieRecommendationViewModel(
 
     private val _generatedRecommendation = MutableStateFlow<MovieRecommendation?>(null)
     val generatedRecommendation: StateFlow<MovieRecommendation?> = _generatedRecommendation.asStateFlow()
+    private val _savedMovieIds = MutableStateFlow<Set<String>>(emptySet())
+    val savedMovieIds: StateFlow<Set<String>> = _savedMovieIds.asStateFlow()
 
     fun generateRecommendations() {
         viewModelScope.launch {
@@ -109,7 +111,10 @@ class MovieRecommendationViewModel(
                 )
 
                 val rankedMovies = recommendationResult.getOrNull() ?: availableMovies
-                _recommendations.value = rankedMovies
+                val savedIds = _savedMovieIds.value
+                _recommendations.value = rankedMovies.map { movie ->
+                    movie.copy(isSaved = movie.id in savedIds)
+                }
                 _generatedRecommendation.value = MovieRecommendation(
                     movies = rankedMovies,
                     reason = if (movieQuiz.era.isBlank()) {
@@ -224,4 +229,24 @@ class MovieRecommendationViewModel(
             )
         )
     }
+
+    fun saveMovie(movieId: String) {
+        _savedMovieIds.update { current -> current + movieId }
+        _recommendations.update { movies ->
+            movies.map { movie ->
+                if (movie.id == movieId) movie.copy(isSaved = true) else movie
+            }
+        }
+    }
+
+    fun unsaveMovie(movieId: String) {
+        _savedMovieIds.update { current -> current - movieId }
+        _recommendations.update { movies ->
+            movies.map { movie ->
+                if (movie.id == movieId) movie.copy(isSaved = false) else movie
+            }
+        }
+    }
+
+    fun isMovieSaved(movieId: String): Boolean = movieId in _savedMovieIds.value
 }
