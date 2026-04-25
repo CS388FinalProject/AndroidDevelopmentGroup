@@ -36,6 +36,8 @@ class BookRecommendationViewModel(
 
     private val _generatedRecommendation = MutableStateFlow<BookRecommendation?>(null)
     val generatedRecommendation: StateFlow<BookRecommendation?> = _generatedRecommendation.asStateFlow()
+    private val _savedBookIds = MutableStateFlow<Set<String>>(emptySet())
+    val savedBookIds: StateFlow<Set<String>> = _savedBookIds.asStateFlow()
 
     fun generateRecommendations() {
         viewModelScope.launch {
@@ -75,7 +77,10 @@ class BookRecommendationViewModel(
                 )
 
                 val rankedBooks = recommendationResult.getOrNull() ?: emptyList()
-                _recommendations.value = rankedBooks
+                val savedIds = _savedBookIds.value
+                _recommendations.value = rankedBooks.map { book ->
+                    book.copy(isSaved = book.id in savedIds)
+                }
                 _generatedRecommendation.value = BookRecommendation(
                     books = rankedBooks,
                     reason = if (bookQuiz.mood.isBlank()) {
@@ -96,6 +101,7 @@ class BookRecommendationViewModel(
     }
 
     fun saveBook(bookId: String) {
+        _savedBookIds.update { current -> current + bookId }
         _recommendations.update { books ->
             books.map { book ->
                 if (book.id == bookId) book.copy(isSaved = true) else book
@@ -104,12 +110,15 @@ class BookRecommendationViewModel(
     }
 
     fun unsaveBook(bookId: String) {
+        _savedBookIds.update { current -> current - bookId }
         _recommendations.update { books ->
             books.map { book ->
                 if (book.id == bookId) book.copy(isSaved = false) else book
             }
         }
     }
+
+    fun isBookSaved(bookId: String): Boolean = bookId in _savedBookIds.value
 
     companion object {
         private const val TAG = "BookRecommendationVM"
