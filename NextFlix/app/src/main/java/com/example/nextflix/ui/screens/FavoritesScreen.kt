@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -84,7 +85,11 @@ fun FavoritesScreen(
             }
         } else {
             items(savedMovies, key = { "movie-${it.id}" }) { movie ->
-                FavoriteMovieCard(movie = movie, onClick = { onMovieSelected(movie) })
+                FavoriteMovieCard(
+                    movie = movie,
+                    onClick = { onMovieSelected(movie) },
+                    onRemove = { movieViewModel.unsaveMovie(movie.id) }
+                )
             }
         }
 
@@ -107,7 +112,11 @@ fun FavoritesScreen(
             }
         } else {
             items(savedBooks, key = { "book-${it.id}" }) { book ->
-                FavoriteBookCard(book = book, onClick = { onBookSelected(book) })
+                FavoriteBookCard(
+                    book = book,
+                    onClick = { onBookSelected(book) },
+                    onRemove = { bookViewModel.unsaveBook(book.id) }
+                )
             }
         }
 
@@ -118,7 +127,8 @@ fun FavoritesScreen(
 @Composable
 private fun FavoriteMovieCard(
     movie: Movie,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onRemove: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -134,7 +144,8 @@ private fun FavoriteMovieCard(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp)
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             if (!movie.posterUrl.isNullOrEmpty() && movie.posterUrl != "N/A") {
                 AsyncImage(
@@ -168,7 +179,6 @@ private fun FavoriteMovieCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight()
                     .padding(vertical = 4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -201,6 +211,14 @@ private fun FavoriteMovieCard(
                     }
                 }
             }
+
+            IconButton(onClick = onRemove) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = "Remove ${movie.title} from favorites",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -208,7 +226,8 @@ private fun FavoriteMovieCard(
 @Composable
 private fun FavoriteBookCard(
     book: Book,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onRemove: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -224,7 +243,8 @@ private fun FavoriteBookCard(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp)
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             if (book.thumbnailUrl != null) {
                 AsyncImage(
@@ -262,7 +282,6 @@ private fun FavoriteBookCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight()
                     .padding(vertical = 4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -307,6 +326,14 @@ private fun FavoriteBookCard(
                         )
                     }
                 }
+            }
+
+            IconButton(onClick = onRemove) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = "Remove ${book.title} from favorites",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
