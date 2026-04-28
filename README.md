@@ -173,3 +173,4 @@ Here are the issues that are still open:
 
 - Embed the YouTube/Vimeo link of your Completed Demo Day prep video
 - [Demo Video](https://youtu.be/a8kjrN5mKHs?si=rWKVI7TFX9jC0Yal)
+- [Demo Video Update](https://youtu.be/1rjis_h_h4U?si=Ld8rQxRWWKbDRQOP)
